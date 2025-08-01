@@ -1,3 +1,4 @@
+#include "parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -68,7 +69,6 @@ void shellPrompt(void) {
     snprintf(home, sizeof(home), "/home/%s/", name);
 
     char current_directory[PATH_MAX];
-    ssize_t bytes;
 
     if (getcwd(current_directory, sizeof(current_directory)) != NULL) {
         if (strncmp(current_directory, home, strlen(home)) == 0) {
@@ -90,9 +90,11 @@ void shellPrompt(void) {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(void) {
     enterRawMode();
+    atexit(&restoreOriginalMode);
 
+    const char *cmd_fail = "Unable to execute command.\n";
     const char *newline = "\r\n";
     int fd = open("shell_art.txt", O_RDONLY);
 
@@ -105,7 +107,7 @@ int main(int argc, char *argv[]) {
     
     restoreOriginalMode();
 
-    while (bytes = read(fd, &buf, SHELL_BUFFER) > 0) {
+    while ((bytes = read(fd, &buf, SHELL_BUFFER)) > 0) {
         if (buf[0] == '\n') {
             write(STDOUT_FILENO, newline, strlen(newline));
         } else {
@@ -119,17 +121,37 @@ int main(int argc, char *argv[]) {
     write(STDOUT_FILENO, newline, strlen(newline)); 
 
     shellPrompt();
+    char items[64];
+    size_t count = 0;
 
-    while (bytes = read(STDIN_FILENO, &buf, SHELL_BUFFER) > 0) {
-        if (buf[0] == '\r') { 
+    while ((bytes = read(STDIN_FILENO, &buf, SHELL_BUFFER)) > 0) {
+        if (buf[0] == '\r') {
             write(STDOUT_FILENO, newline, strlen(newline));
+
+            // LEXER->PARSE->EXECUTE CYCLE
+            TOKEN *tokens = tokenize(items, &count);
+            COMMAND *cmd = parse(tokens, count);
+            
+            write(STDOUT_FILENO, newline, strlen(newline));
+        
+            if (execute(cmd) != 0) {
+                write(STDERR_FILENO, cmd_fail, strlen(cmd_fail));
+            }
+
+            for (size_t i = 0; i < count; i++) {
+                items[i] = '\0';
+            }
+            count = 0;
+
             shellPrompt();
         } else {
             write(STDOUT_FILENO, &buf, SHELL_BUFFER);
+            if (count < (sizeof(items) - 1)) {
+                items[count] = buf[0];
+                count++;
+            }
         }
     }
-
-    atexit(&restoreOriginalMode);
 
     return 0;
 }
