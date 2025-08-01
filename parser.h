@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #ifndef PARSER_H
 #define PARSER_H
 
@@ -6,24 +8,23 @@
 
 /*
     Lexer/Parser structs
+    cmd, t_type, & token itself
 */
 
 typedef struct {
-    char **argv;
-    char *cmd;
-    char *infile;
-    char *outfile;
-    int background; 
+    char *arg;
+    char **argv; // the first arg will always be the cmd
     int argc;
 
 } COMMAND;
 
+// cmd->arg = "cd"
+// cmd->argv = ["cd", "dir", NULL]
+// cmd->argc = 2
+
 typedef enum {
     WORD,
     PIPE,
-    REDIRECT_IN,
-    REDIRECT_IN,
-    SEMICOLON,
     AMPERSAND,
     NEWLINE,
 
@@ -39,12 +40,11 @@ typedef struct {
     Lexer/Parser function headers
 */
 
-TOKEN* tokenize(char *input, ssize_t *count);
-TOKEN *create_token(TYPE t_type, const char *name);
-void free_tokens(TOKEN *tokens);
+TOKEN* tokenize(char *input, size_t *count);
+COMMAND *parse(TOKEN *tokens, size_t count);
+int execute(COMMAND *cmd);
 
-COMMAND *parse(TOKEN *tokens);
-COMMAND *create();
+void free_tokens(TOKEN *tokens, size_t count);
 void free_commands(COMMAND *cmd);
 
-#endif PARSER_H
+#endif
