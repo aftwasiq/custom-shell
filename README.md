@@ -4,7 +4,7 @@ A very simple custom UNIX-like shell written completely from scratch in C, howev
 
 <img width="1417" height="700" alt="SHELL_IMAGE" src="https://github.com/user-attachments/assets/cd24446d-5743-4c95-b330-76f33cce71bd" />
 
-# Supported Commands
+# Supported Commands (at the moment)
 
 | Command                 	| Usage        	| Description                                                              	|
 |-------------------------	|--------------	|--------------------------------------------------------------------------	|
