@@ -1,5 +1,6 @@
 # qshell (IN PROGRESS)
-A very simple custom UNIX-like shell written completely from scratch in C, however, it relies entirely on just system calls. The features are currently limited to built-in commands, tokenization & parsing, with plans to include piping, I/O redirection, command history and more. 
+
+A simple custom UNIX-based shell written in low-level C for personal use. It features its own relatively simple Lexer & Parser 
 
 Disclaimer: i'm still actively working on this so it is very buggy & not finalized
 
