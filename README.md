@@ -5,7 +5,7 @@ A simple custom UNIX-based shell written in low-level C for personal use. It fea
 Disclaimer: i'm still actively working on this so it is very buggy & not finalized
 
 
-<img width="1417" height="700" alt="SHELL_IMAGE" src="https://github.com/user-attachments/assets/cd24446d-5743-4c95-b330-76f33cce71bd" />
+<img width="939" height="720" alt="Screenshot 2025-08-27 001949" src="https://github.com/user-attachments/assets/d1c2e44b-52b6-4db9-a80d-23f768e326ed" />
 
 # Supported Commands (at the moment)
 
@@ -19,3 +19,4 @@ Disclaimer: i'm still actively working on this so it is very buggy & not finaliz
 | Exit Shell              	| exit         	| Leaves qshell and returns to previous terminal settings                  	|
 
 not finished
+
