@@ -11,11 +11,12 @@
 */
 
 TOKEN* tokenize(char *input, size_t *count_out) {
-    int capacity = INITIAL_CAPACITY;
-    int token_count = 0;
     int pos = 0;
     
+    size_t token_count = 0;
+    size_t capacity = 4;
     TOKEN *tokens = malloc(capacity * sizeof(TOKEN));
+
     if (!tokens) {
         return NULL;
     }
@@ -39,10 +40,13 @@ TOKEN* tokenize(char *input, size_t *count_out) {
         char *value = malloc(length + 1);
         strncpy(value, &input[start], length);
         value[length] = '\0';
-
-        if (token_count >= capacity) {
-            capacity += 8;
+        
+        if (token_count <= capacity) {
+            capacity *= 2;
             tokens = realloc(tokens, capacity * sizeof(TOKEN));
+            if (!tokens) {
+                return NULL;
+            }
         }
 
         tokens[token_count].t_type = WORD;
@@ -59,27 +63,25 @@ COMMAND *parse(TOKEN *tokens, size_t count) {
     COMMAND *cmd = malloc(sizeof(COMMAND));
     if (!cmd) {
         return NULL;
-    }
+    };
 
-    int i = 0;
-    cmd->argc = 0;
-    cmd->argv = malloc(sizeof(char*) * (i + 2));
+    cmd->argc = count;
+    cmd->argv = malloc(sizeof(char*) * (count + 1));
+    int found = 0;
 
     for (size_t i = 0; i < count; i++) {
         // for now; just handling words, ill add other types later
         if (tokens[i].t_type == WORD) {
-            cmd->arg = tokens[i].literal;
-            cmd->argc += 1;
-
-            if (i != 0) {
-                cmd->argv = realloc(cmd->argv, sizeof(char*) * (i + 2)); 
-            }
-
-            cmd->argv[i] = tokens[i].literal;
-            cmd->argv[i + 1] = NULL;
+            if (found == 0) {
+                cmd->arg = strdup(tokens[i].literal);
+                found = 1; 
+            } 
+            
+            cmd->argv[i] = strdup(tokens[i].literal);
         } 
     }
-
+    
+    cmd->argv[count] = NULL;
     return cmd; 
 }
 
@@ -89,6 +91,7 @@ void free_tokens(TOKEN *tokens, size_t count) {
     }
     free(tokens);
 }
+
 void free_commands(COMMAND *cmd) {
     free(cmd->argv);
     free(cmd);
