@@ -74,14 +74,16 @@ void shellPrompt(void) {
         if (strncmp(current_directory, home, strlen(home)) == 0) {
             char *msg = (current_directory + strlen(home));
 
-            write(STDOUT_FILENO, "[qsh] ", 6);
             write(STDOUT_FILENO, MAGENTA, strlen(MAGENTA));
-            
             write(STDOUT_FILENO, name, strlen(name));
+            write(STDOUT_FILENO, DEFAULT, strlen(DEFAULT));
             write(STDOUT_FILENO, "@", 1);
+            write(STDOUT_FILENO, MAGENTA, strlen(MAGENTA));
+
             write(STDOUT_FILENO, "~", 1);
-            write(STDOUT_FILENO, msg, strlen(msg));
-            
+            write(STDOUT_FILENO, "/", 1);
+
+            write(STDOUT_FILENO, msg, strlen(msg)); 
             write(STDOUT_FILENO, DEFAULT, strlen(DEFAULT));
             write(STDOUT_FILENO, qsh, strlen(qsh));
         }
@@ -90,7 +92,7 @@ void shellPrompt(void) {
     }
 }
 
-int main(void) {
+int main() {
     enterRawMode();
     atexit(&restoreOriginalMode);
 
@@ -126,24 +128,27 @@ int main(void) {
 
     while ((bytes = read(STDIN_FILENO, &buf, SHELL_BUFFER)) > 0) {
         if (buf[0] == '\r') {
-            write(STDOUT_FILENO, newline, strlen(newline));
+            if (count == 0) {
+                write(STDOUT_FILENO, newline, strlen(newline));
+                shellPrompt();
+            } else {
+                // LEXER->PARSE->EXECUTE CYCLE
+                TOKEN *tokens = tokenize(items, &count);
+                COMMAND *cmd = parse(tokens, count);
+                
+                write(STDOUT_FILENO, newline, strlen(newline));
 
-            // LEXER->PARSE->EXECUTE CYCLE
-            TOKEN *tokens = tokenize(items, &count);
-            COMMAND *cmd = parse(tokens, count);
-            
-            write(STDOUT_FILENO, newline, strlen(newline));
-        
-            if (execute(cmd) != 0) {
-                write(STDERR_FILENO, cmd_fail, strlen(cmd_fail));
+                if (execute(cmd) != 0) {
+                    write(STDERR_FILENO, cmd_fail, strlen(cmd_fail));
+                }
+
+                for (size_t i = 0; i < count; i++) {
+                    items[i] = '\0';
+                }
+
+                count = 0;
+                shellPrompt();
             }
-
-            for (size_t i = 0; i < count; i++) {
-                items[i] = '\0';
-            }
-            count = 0;
-
-            shellPrompt();
         } else {
             write(STDOUT_FILENO, &buf, SHELL_BUFFER);
             if (count < (sizeof(items) - 1)) {
@@ -151,10 +156,19 @@ int main(void) {
                 count++;
             }
         }
+
+        if (buf[0] == '\b') {
+            write(STDOUT_FILENO, newline, strlen(newline));
+            printf("%s", items);
+
+        }
     }
 
     return 0;
 }
+
+
+
 
 
 
