@@ -1,6 +1,6 @@
 # qshell (IN PROGRESS)
 
-A simple custom UNIX-based shell written in low-level C for personal use, built from scratch. It features its own relatively simple Lexer & Parser 
+A simple custom UNIX-based shell written in low-level C for personal use, built from scratch. It features its own relatively simple lexer & parser for command input.
 
 Disclaimer: i'm still actively working on this so it is very buggy & not finalized
 
