@@ -20,3 +20,17 @@ Disclaimer: i'm still actively working on this so it is very buggy & not finaliz
 
 not finished
 
+# Checklist
+
+- [x] Raw Input Mode
+- [x] Basic I/O
+- [x] Basic Lexer 
+- [x] Basic Parser
+- [x] Command Generation
+- [ ] Job Control
+- [ ] Pipelining
+- [ ] I/O Redirection
+- [ ] Command History
+- [ ] Signal Handling
+- [ ] Scripting
+
