@@ -4,8 +4,9 @@ A simple custom UNIX-based shell written in low-level C for personal use, built 
 
 Disclaimer: i'm still actively working on this so it is very buggy & not finalized
 
+<img width="1711" height="995" alt="Screenshot 2025-09-05 000219" src="https://github.com/user-attachments/assets/aac941b2-60dc-48cc-8404-e59ad20c13e5" />
 
-<img width="939" height="720" alt="Screenshot 2025-08-27 001949" src="https://github.com/user-attachments/assets/d1c2e44b-52b6-4db9-a80d-23f768e326ed" />
+
 
 # Supported Commands (at the moment)
 
