@@ -1,4 +1,4 @@
-# qshell (IN PROGRESS)
+# Custom Shell (IN PROGRESS)
 
 A simple custom UNIX-based shell written in low-level C for personal use, built from scratch. It features its own relatively simple lexer & parser for command input.
 
