@@ -1,4 +1,4 @@
-# Custom Shell (IN PROGRESS)
+# Custom Shell
 
 A simple custom UNIX-based shell written in low-level C for personal use, built from scratch. It features its own relatively simple lexer & parser for command input.
 
